@@ -1,0 +1,52 @@
+#pragma version >=0.3.0;
+
+#include "../lib/func/stdlib.fc";
+
+;; Определить вспомогательные функции
+(int) load_from_memory() inline {
+
+    slice ds = get_data().begin_parse();
+    return ds~load_uint(64);
+
+} 
+
+() save_in_memory(int num) impure {
+    
+    set_data(
+        begin_cell()
+            .store_uint(num, 64)
+        .end_cell()
+    );
+
+} 
+
+;; Внутренние методы
+
+() recv_internal (slice msg_body) {
+
+    ;; Условия действий
+    ifnot (msg_body~load_uint(256) == 771051151041039711039115329799101) {
+        return ();
+    }
+
+    ;; Подготовка к действиям
+    int seqno = load_from_memory();
+    int new_seqno = seqno + 1;
+
+    ;; Действия
+    save_in_memory(new_seqno);
+    
+}
+
+;; Внешние методы
+
+() recv_external(slice msg_body) impure {
+
+    ;; не делать ничего
+
+}
+
+;; Гет-методы
+(int) get_seqno() method_id {
+    return load_from_memory();
+}

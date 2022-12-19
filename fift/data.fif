@@ -1,0 +1,6 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+<b
+  0 64 u, // seqno
+b>
